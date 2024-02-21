@@ -101,7 +101,7 @@ void useWeapon(const Weapon& weapon, Enemy& enemy, int& health, Armor& armor) {
                 cout << "You will now take direct damage to your health.\n";
                 health -= (enemy.damage - armor.durability);
                 armor.durability = 0;
-                armor.name = ""; // Remove armor
+                armor.name = "";
             }
         } else {
             cout << "You take " << enemy.damage << " damage.\n";
@@ -113,7 +113,16 @@ void useWeapon(const Weapon& weapon, Enemy& enemy, int& health, Armor& armor) {
 void exploreDungeon(int& health, const Weapon& weapon, Armor& armor, vector<Item>& inventory) {
     string choice;
     bool exitRequested = false;
-    Enemy enemy("Goblin", 30, 10);
+    Enemy goblin("Goblin", 30, 10);
+    Enemy knight("Knight", 50, 15);
+    Enemy giant("Giant", 100, 20);
+    Enemy dragon("Dragon", 150, 25);
+    Enemy skeleton("Skeleton", 25, 12);
+    Enemy zombie("Zombie", 40, 8);
+    Enemy orc("Orc", 60, 18);
+    Enemy slime("Slime", 20, 5);
+    Enemy werewolf("Werewolf", 70, 15);
+    Enemy witch("Witch", 45, 10);
     
     while (!exitRequested) {
         cout << "You find yourself in a dark dungeon filled with danger.\n";
@@ -156,10 +165,27 @@ void exploreDungeon(int& health, const Weapon& weapon, Armor& armor, vector<Item
         } else if (choice == "2") {
             cout << "You proceed through the door and enter the room...\n";
             
-            cout << "You encounter a " << enemy.name << "!\n";
+            Enemy currentEnemy("", 0, 0);
+            
+            vector<Enemy> enemies;
+            enemies.push_back(goblin);
+            enemies.push_back(knight);
+            enemies.push_back(giant);
+            enemies.push_back(dragon);
+            enemies.push_back(skeleton);
+            enemies.push_back(zombie);
+            enemies.push_back(orc);
+            enemies.push_back(slime);
+            enemies.push_back(werewolf);
+            enemies.push_back(witch);
+            
+            int randomIndex = rand() % enemies.size();
+            currentEnemy = enemies[randomIndex];
+            
+            cout << "You encounter a " << currentEnemy.name << "!\n";
             bool playerTurn = true;
             
-            while (enemy.health > 0) {
+            while (currentEnemy.health > 0) {
                 if (playerTurn) {
                     cout << "What would you like to do?\n";
                     cout << "1. Fight\n";
@@ -172,7 +198,7 @@ void exploreDungeon(int& health, const Weapon& weapon, Armor& armor, vector<Item
                     cin >> choice;
                     
                     if (choice == "1") {
-                        useWeapon(weapon, enemy, health, armor);
+                        useWeapon(weapon, currentEnemy, health, armor);
                         playerTurn = false;
                     } else if (choice == "2") {
                         cout << "You use a potion to heal yourself.\n";
@@ -206,8 +232,8 @@ void exploreDungeon(int& health, const Weapon& weapon, Armor& armor, vector<Item
                         cout << "Invalid choice! Please choose a valid option.\n";
                     }
                 } else {
-                    cout << "The " << enemy.name << " attacks you!\n";
-                    health -= enemy.damage;
+                    cout << "The " << currentEnemy.name << " attacks you!\n";
+                    health -= currentEnemy.damage;
                     cout << "Your health is now " << health << ".\n";
                     playerTurn = true;
                 }
